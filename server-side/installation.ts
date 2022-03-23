@@ -12,20 +12,32 @@ import { Client, Request } from '@pepperi-addons/debug-server'
 import { Relation } from '@pepperi-addons/papi-sdk'
 import MyService from './my.service';
 
-export async function install(client: Client, request: Request): Promise<any> {
-    // For page block template uncomment this.
-    // const res = await createPageBlockRelation(client);
-    // return res;
-    return {success:true,resultObject:{}}
-}
-
-export async function uninstall(client: Client, request: Request): Promise<any> {
-    return {success:true,resultObject:{}}
-}
-
-export async function upgrade(client: Client, request: Request): Promise<any> {
-    return {success:true,resultObject:{}}
-}
+export async function install(client: Client, request: Request) {
+    const service = new MyService(client);       
+    try{            
+         let employeeDetails = await service.createEmployeesTable(client, request.body);   
+         return {success: true, resultObject: employeeDetails}
+     }
+     catch(e){
+         return {success: false, errorMessage: e.message}    
+     }        
+ }
+ 
+ export async function uninstall(client: Client, request: Request) {
+     return {success: true, resultObject: {}};
+ }
+ 
+ export async function upgrade(client: Client, request: Request) {
+     const service = new MyService(client);       
+     try{             
+          let employeeDetails = await service.createEmployeesTable(client, request.body);   
+          return {success: true, resultObject: employeeDetails}
+      }
+      catch(e){
+          return {success: false, errorMessage: e.message}    
+      }        
+ }
+ 
 
 export async function downgrade(client: Client, request: Request): Promise<any> {
     return {success:true,resultObject:{}}
