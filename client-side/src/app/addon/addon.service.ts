@@ -32,21 +32,33 @@ export class AddonService {
         this.papiBaseURL = this.parsedToken["pepperi.baseurl"];
     }
 
-    async get(endpoint: string): Promise<any> {
-        return await this.papiClient.get(endpoint);
-    }
 
-    async post(endpoint: string, body: any): Promise<any> {
-        return await this.papiClient.post(endpoint, body);
-    }
+    async getEmployeeDetails(params){
 
-    pepGet(endpoint: string): Observable<any> {
-        return this.pepHttp.getPapiApiCall(endpoint);
-    }
+        let body = {
+            addonUUID: params.addonUUID,
+            userID:  params.userID
+        }
 
-    pepPost(endpoint: string, body: any): Observable<any> {
-        return this.pepHttp.postPapiApiCall(endpoint, body);
+        //let res = await this.pepHttp.postHttpCall('http://localhost:4500/api/get_employee_details', body).toPromise(); 
+        let res = await this.pepHttp.postPapiApiCall(`/addons/api/${params.pluginUUID}/api/get_employee_details`, body).toPromise(); 
+        return res;
 
     }
+
+    async setEmployeeDetails(params){
+        
+        let body = {
+            UserID:   params.UserID,
+            Value:  JSON.stringify(params.Value)//json object with employee details
+        } 
+
+        //let res = await this.pepHttp.postHttpCall('http://localhost:4500/api/set_employee_details', body).toPromise(); 
+        let res = await this.pepHttp.postPapiApiCall(`/addons/api/${params.pluginUUID}/api/set_employee_details`, body).toPromise(); 
+        return res;
+
+    }
+
+   
 
 }
