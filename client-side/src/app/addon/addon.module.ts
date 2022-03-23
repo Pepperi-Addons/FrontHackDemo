@@ -14,6 +14,8 @@ import { TranslateLoader, TranslateModule, TranslateService, TranslateStore } fr
 import { AddonService } from './addon.service';
 import { AddonComponent } from './index';
 
+import { GoogleMapsModule } from '@angular/google-maps'
+
 const pepIcons = [
     pepIconSystemClose,
 ];
@@ -36,6 +38,7 @@ export const routes: Routes = [
         PepSizeDetectorModule,
         PepTopBarModule,
         PepPageLayoutModule,
+        GoogleMapsModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,
