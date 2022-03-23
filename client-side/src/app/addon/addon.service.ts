@@ -37,11 +37,11 @@ export class AddonService {
 
         let body = {
             addonUUID: params.addonUUID,
-            userID:  params.userID
+            userID:  params.email
         }
 
-        //let res = await this.pepHttp.postHttpCall('http://localhost:4500/api/get_employee_details', body).toPromise(); 
-        let res = await this.pepHttp.postPapiApiCall(`/addons/api/${params.pluginUUID}/api/get_employee_details`, body).toPromise(); 
+        let res = await this.pepHttp.postHttpCall('http://localhost:4500/api/get_employee_details', body).toPromise(); 
+        //let res = await this.pepHttp.postPapiApiCall(`/addons/api/${params.pluginUUID}/api/get_employee_details`, body).toPromise(); 
         return res;
 
     }
@@ -49,12 +49,12 @@ export class AddonService {
     async setEmployeeDetails(params){
         
         let body = {
-            UserID:   params.UserID,
+            UserID:   params.email,
             Value:  JSON.stringify(params.Value)//json object with employee details
         } 
 
-        //let res = await this.pepHttp.postHttpCall('http://localhost:4500/api/set_employee_details', body).toPromise(); 
-        let res = await this.pepHttp.postPapiApiCall(`/addons/api/${params.pluginUUID}/api/set_employee_details`, body).toPromise(); 
+        let res = await this.pepHttp.postHttpCall('http://localhost:4500/api/set_employee_details', body).toPromise(); 
+        //let res = await this.pepHttp.postPapiApiCall(`/addons/api/${params.pluginUUID}/api/set_employee_details`, body).toPromise(); 
         return res;
 
     }

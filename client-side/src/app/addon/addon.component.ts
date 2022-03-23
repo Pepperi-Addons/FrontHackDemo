@@ -29,6 +29,18 @@ export class AddonComponent implements OnInit {
 
     ngOnInit() {
         this.renderMap();
+
+        let params = {
+            email:   'nitsan.p@pepperi.com',
+            Value : {Name:"Nitsan Prat", 
+                    Address: "Bental 9 Kfar Yona Israel", 
+                    StartedDateTime: "10/03/2010", 
+                    Title: "Project Manager", 
+                    Department: "Post Sales",
+                    FunFact: "I have 15 cats!"}
+        }
+
+        this.addonService.setEmployeeDetails(params);
         
     }
 
@@ -129,7 +141,7 @@ export class AddonComponent implements OnInit {
     }
 
     getEmployeeMarkers(){
-        
+        //let a = this.addonService.getEmployeeDetails();
     }
 
     openDialog() {
