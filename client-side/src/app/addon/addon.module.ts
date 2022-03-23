@@ -15,6 +15,8 @@ import { AddonService } from './addon.service';
 import { AddonComponent } from './index';
 
 import { GoogleMapsModule } from '@angular/google-maps'
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
+import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
 
 const pepIcons = [
     pepIconSystemClose,
@@ -39,6 +41,8 @@ export const routes: Routes = [
         PepTopBarModule,
         PepPageLayoutModule,
         GoogleMapsModule,
+        PepDialogModule,
+        PepButtonModule,
         TranslateModule.forChild({
             loader: {
                 provide: TranslateLoader,

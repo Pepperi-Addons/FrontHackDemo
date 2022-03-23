@@ -36,7 +36,7 @@ class MyService {
                     Name: TABLE_NAME,        
                     Type: 'meta_data',        
                     Fields: {        
-                        UserID: {        
+                        Key: {        
                             Type: 'String'        
                         },
                         Value: {
@@ -44,26 +44,130 @@ class MyService {
                         }                      
                     }        
                     })                  
-           
-            //await this.setEmployeeDetails(client,body);       
+
+                    /*
+            let employeeDetails = [
+                {
+                    UserID: 'benny.t@pepperi.com',
+                    Value: {Name:"Benny T", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "R&D web team leader", 
+                            Department: "Front",
+                            FunFact: "I am riding on a Harley Davidson!"}
+                },
+                {
+                    UserID: 'nitsan.p@pepperi.com',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                },
+                {
+                    UserID: '',
+                    Value: {Name:"Nitsan Prat", 
+                            Address: "Bental 9 Kfar Yona Israel", 
+                            StartedDateTime: "10/03/2010", 
+                            Title: "Project Manager", 
+                            Department: "Post Sales",
+                            FunFact: "I have 10 cats!"}
+                }
+
+
+            ]        
+            
+            await this.setEmployeeDetails(client, employeeDetails);  
+*/
+
+               
         }
+
+         
 
       }     
 
       async getEmployeeDetails(body){
+          let empDetails;
           if(body?.where){
-            return await this.papiClient.addons.data.uuid(body.addonUUID).table("EmployeeInfo").find({ where: `UserID='${body.userID}'`});        
+            empDetails =  await this.papiClient.addons.data.uuid(body.addonUUID).table("EmployeeInfo").find({ where: `UserID='${body.userID}'`});        
           }else{
-            return await this.papiClient.addons.data.uuid(body.addonUUID).table("EmployeeInfo").find();
+            empDetails =  await this.papiClient.addons.data.uuid(body.addonUUID).table("EmployeeInfo").find();
           }
+
+          return empDetails;
       }
 
       async setEmployeeDetails(client: Client,  employeeDetails : any = null)
       {
         //set value to table
         let configObj = {
-            UserID:   employeeDetails.UserID,
-            Value: employeeDetails.Value
+            Key:   employeeDetails.UserID,
+            Value: JSON.stringify(employeeDetails.Value)
         } 
         await this.papiClient.addons.data.uuid(client.AddonUUID).table("EmployeeInfo").upsert(configObj); 
 
