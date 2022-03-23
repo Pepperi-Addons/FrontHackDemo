@@ -1,0 +1,26 @@
+{
+  "AddonUUID": "7a3305ff-f41d-43be-8703-d6efb4250d48",
+  "AddonVersion": "0.0.0",
+  "DebugPort": 4500,
+  "WebappBaseUrl": "https://app.sandbox.pepperi.com",
+  "DefaultEditor": "main",
+  "Endpoints": [
+    "installation.ts",
+    "api.ts"
+  ],
+  "Editors": [
+    "main"
+  ],
+  "PublishConfig": {
+    "ClientStack": "ng10",
+    "Editors": [
+      {
+        "ParentPackageName": "T_L_O_T_BLACK_S",
+        "PackageName": "interactive_info",
+        "Description": "interactive information"
+      }
+    ],
+    "Dependencies": {},
+    "CPISide": []
+  }
+}
