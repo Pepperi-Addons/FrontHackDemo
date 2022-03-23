@@ -15,18 +15,7 @@ class MyService {
         });
     }
 
-    doSomething() {
-        console.log("doesn't really do anything....");
-    }
-    
-    // For page block template
-    upsertRelation(relation): Promise<any> {
-        return this.papiClient.post('/addons/data/relations', relation);
-    }
-
-    getAddons(): Promise<InstalledAddon[]> {
-        return this.papiClient.addons.installedAddons.find({});
-    }
+   
 }
 
 export default MyService;
