@@ -10,15 +10,11 @@ import { AddonService } from "./addon.service";
     styleUrls: ['./addon.component.scss']
 })
 export class AddonComponent implements OnInit {
-    @Input() hostObject: any;
-    
-    @Output() hostEvents: EventEmitter<any> = new EventEmitter<any>();
-    
+
     @ViewChild('mapRef', {static: true }) mapElement: ElementRef;
     
-    
- 
-    //options: google.maps.MapOptions;
+    map = null;
+    officeIcon = null;
 
     constructor(
         private renderer: Renderer2,
@@ -26,22 +22,6 @@ export class AddonComponent implements OnInit {
         public layoutService: PepLayoutService,
         public translate: TranslateService
     ) {
-        //this.scripts.forEach((item) => {
-
-            // const len = $('script').filter(() => {
-            //     return $(this).attr('src') == item;
-            // }).length;
-
-
-
-            // if (len === 0) {
-                // const script = document.createElement('script');
-                // script.type = 'text/javascript';
-                // script.src = item;
-                // this.renderer.appendChild(document.body, script);
-            // }
-
-        //});
         this.layoutService.onResize$.subscribe(size => {
             
         });
@@ -53,28 +33,26 @@ export class AddonComponent implements OnInit {
     }
 
     loadMap = () => {
-        var map = new window['google'].maps.Map(this.mapElement.nativeElement, {
+        this.map = new window['google'].maps.Map(this.mapElement.nativeElement, {
           center: {lat: 32.184448, lng: 34.870766},
           zoom: 2
         });
         
-       
+        this.officeIcon = {
+            url: "https://www.pepperi.com/wp-content/uploads/2015/06/pepperi-favicon.png", // url
+            scaledSize: new google.maps.Size(30, 30), // scaled size
+            origin: new google.maps.Point(0,0), // origin
+            anchor: new google.maps.Point(0, 0) // anchor
+        };
+
         const image = "https://yonatankof.com/misc/pepp/Pepperi%20-%20Icon%20-%20Green%20on%20White%20Square.png";
-        var marker = new window['google'].maps.Marker({
-          position: {lat: 32.184448, lng: 34.870766},
-          map: map,
-          title: 'Hello World!',
-          draggable: true,
-          animation: window['google'].maps.Animation.DROP,
-          icon: image
-        });
-     
+        
+        let markers = this.getOfficeMarkers();
+
         var contentString = '<div id="content">'+
-        '<div id="siteNotice">'+
-        '</div>'+
-        '<h3 id="thirdHeading" class="thirdHeading">laratutorials.com</h3>'+
+        '<h3 class="thirdHeading">Pepperi - Israel</h3>'+
         '<div id="bodyContent">'+
-        '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>'+
+        '<p>14 Hacharoshet, RAANANA 4365707</p>'+
         '</div>'+
         '</div>';
      
@@ -82,13 +60,25 @@ export class AddonComponent implements OnInit {
           content: contentString
         });
      
-          marker.addListener('click', function() {
-            infowindow.open(map, marker);
-          });
-     
-      }
 
-      renderMap() {
+    markers.forEach(markerInfo => {
+            const marker = new google.maps.Marker({
+                ...markerInfo
+              });
+
+              const infoWindow = new google.maps.InfoWindow({
+                content: marker.getTitle()
+              });
+
+             
+    marker.addListener("click", () => {
+        infoWindow.open(marker.getMap(), marker);
+      });
+    })
+     
+    }
+
+    renderMap() {
      
         window['initMap'] = () => {
           this.loadMap();      
@@ -103,16 +93,44 @@ export class AddonComponent implements OnInit {
         } else {
           this.loadMap();
         }
-      }
+    }
 
-    ngAfterViewInit(): void {
-        // Load google maps script after view init
-        // const DSLScript = document.createElement('script');
-        // DSLScript.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCfG-8KGkjaSMWDAugbAjgChKPw2Tg6I1c';
-        // DSLScript.type = 'text/javascript';
-        // document.body.appendChild(DSLScript);
-        // document.body.removeChild(DSLScript);
-      }
+    getOfficeMarkers(){
+        return [
+            {
+              position: new google.maps.LatLng(32.184448, 34.870766),
+              map: this.map,
+              animation: window['google'].maps.Animation.DROP,
+              title: "Raanana Israel",
+              icon: this.officeIcon
+            },
+            {
+              position: new google.maps.LatLng(50.450001, 30.523333),
+              map: this.map,
+              animation: window['google'].maps.Animation.DROP,
+              title: "Kiev Ukraine",
+              icon: this.officeIcon
+            },
+            {
+                position: new google.maps.LatLng(40.730610, -73.935242),
+                map: this.map,
+                animation: window['google'].maps.Animation.DROP,
+                title: "New York",
+                icon: this.officeIcon
+            },
+            {
+                position: new google.maps.LatLng(-33.865143, 151.209900),
+                map: this.map,
+                animation: window['google'].maps.Animation.DROP,
+                title: "Australia",
+                icon: this.officeIcon
+            }
+        ];
+    }
+
+    getEmployeeMarkers(){
+        
+    }
 
     openDialog() {
         
