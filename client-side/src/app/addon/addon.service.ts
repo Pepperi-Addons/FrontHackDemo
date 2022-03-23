@@ -49,8 +49,8 @@ export class AddonService {
     async setEmployeeDetails(params){
         
         let body = {
-            UserID:   params.UserID,
-            Value:  JSON.stringify(params.Value)//json object with employee details
+            UserID:  params.UserID,
+            Value:   params.Value//json object with employee details
         } 
 
         //let res = await this.pepHttp.postHttpCall('http://localhost:4500/api/set_employee_details', body).toPromise(); 
