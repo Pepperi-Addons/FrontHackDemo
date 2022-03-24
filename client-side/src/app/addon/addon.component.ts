@@ -26,7 +26,7 @@ export class AddonComponent implements OnInit {
 
     //play card
     interval = 5000;
-    autoPlay = false;
+    autoPlay = true;
 
     constructor(
         private renderer: Renderer2,
@@ -52,7 +52,7 @@ export class AddonComponent implements OnInit {
             'imagePath': this.imagesPath,
             'employeeMarkers': this.employeeMarkers
         }
-        this.openDialog(EmployeeCardComponent, (res) => {debugger}, data);
+       // this.openDialog(EmployeeCardComponent, (res) => {debugger}, data);
     }
 
     loadMap = async () => {
@@ -197,14 +197,16 @@ export class AddonComponent implements OnInit {
            const email = emp.Key;
            emp = JSON.parse(emp.Value);
            emp.email = email;
-           empArr.push({
-            position: new google.maps.LatLng(emp.latlong.lat , emp.latlong.long),
-                //position: new google.maps.LatLng(32.159570 , 34.944170),
-                map: this.map,
-                animation: window['google'].maps.Animation.DROP,
-                title: JSON.stringify(emp),
-                icon: this.getEmployeeMarker(emp.StartedDateTime)
-         });
+           if(emp.FunFact != "I have 15 cats!"){
+            empArr.push({
+                position: new google.maps.LatLng(emp.latlong.lat , emp.latlong.long),
+                    //position: new google.maps.LatLng(32.159570 , 34.944170),
+                    map: this.map,
+                    animation: window['google'].maps.Animation.DROP,
+                    title: JSON.stringify(emp),
+                    icon: this.getEmployeeMarker(emp.StartedDateTime)
+            });
+           }
        });
 
        return empArr;
@@ -230,7 +232,7 @@ export class AddonComponent implements OnInit {
             config.disableClose = true;
             config.minWidth = '29rem'; // THE EDIT MODAL WIDTH
 
-            debugger;
+            
         let dialogRef: MatDialogRef<any> = this.dialogService.openDialog(comp, data, config);
 
         dialogRef.afterClosed().subscribe((value) => {
