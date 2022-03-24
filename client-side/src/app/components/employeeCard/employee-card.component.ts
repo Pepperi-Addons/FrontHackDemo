@@ -10,12 +10,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Injectable()
 export class EmployeeCardComponent implements OnInit {
     
-    public folderName: string = '';
-    constructor(private dialogRef: MatDialogRef<EmployeeCardComponent>) {
-       
-    }
+    backgroundSRC = null;
+    constructor(private dialogRef: MatDialogRef<EmployeeCardComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {          
+    }   
+  
     ngOnInit(): void {
- 
+       this.backgroundSRC = this.data.imagePath + '/icons/BackImage.jpeg';
     }
 
     close(event){
@@ -23,7 +23,7 @@ export class EmployeeCardComponent implements OnInit {
     }
 
     addFolder(event){
-        this.dialogRef?.close(this.folderName);
+        this.dialogRef?.close();
     }
 
 }

@@ -47,7 +47,7 @@ export class AddonService {
     }
 
     async setEmployeeDetails(params){
-        
+        debugger;
         let body = {
             UserID:  params.email,
             Value:   params.Value//json object with employee details

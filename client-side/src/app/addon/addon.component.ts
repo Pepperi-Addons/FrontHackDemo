@@ -6,6 +6,7 @@ import { AddonService } from "./addon.service";
 import { PepDialogService } from "@pepperi-addons/ngx-lib/dialog";
 import { MatDialogRef } from "@angular/material/dialog";
 import { EmployeeCardComponent } from '../components/employeeCard/employee-card.component';
+import { NOT_BOOTSTRAPPED } from "single-spa";
 
 @Component({
     selector: 'addon-module',
@@ -20,6 +21,12 @@ export class AddonComponent implements OnInit {
     imagesPath: string;
     map = null;
     officeIcon = null;
+    lastInfoMarker = null;
+    employeeMarkers = null;
+
+    //play card
+    interval = 5000;
+    autoPlay = false;
 
     constructor(
         private renderer: Renderer2,
@@ -37,26 +44,22 @@ export class AddonComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.renderMap();
-        //this.openDialog(EmployeeCardComponent,null,null);
-        // let params = {
-        //     email:   'nitsan.p@pepperi.com',
-        //     Value : {Name:"Nitsan Prat", 
-        //             Address: "Bental 9 Kfar Yona Israel", 
-        //             StartedDateTime: "10/03/2010", 
-        //             Title: "Project Manager", 
-        //             Department: "Post Sales",
-        //             FunFact: "I have 15 cats!"}
-        // }
+        this.renderMap(); 
+    }
 
-        // this.addonService.setEmployeeDetails(params);
-        
+    ngAfterViewInit(){
+        var data = {
+            'imagePath': this.imagesPath,
+            'employeeMarkers': this.employeeMarkers
+        }
+        this.openDialog(EmployeeCardComponent, (res) => {debugger}, data);
     }
 
     loadMap = async () => {
         this.map = new window['google'].maps.Map(this.mapElement.nativeElement, {
           center: {lat: 32.184448, lng: 34.870766},
-          zoom: 2
+          fullscreenControl: true,
+          zoom: 12
         });
         
         this.officeIcon = {
@@ -68,45 +71,71 @@ export class AddonComponent implements OnInit {
 
         const image = "https://yonatankof.com/misc/pepp/Pepperi%20-%20Icon%20-%20Green%20on%20White%20Square.png";
         
-        let markers = this.getOfficeMarkers();
-        let empMarkers = await this.getEmployeeMarkers();
+        //let markers = this.getOfficeMarkers();
+        this.employeeMarkers = await this.getEmployeeMarkers();
 
-        markers = markers.concat(empMarkers);
-        // var contentString = '<div id="content">'+
-        // '<h3 class="thirdHeading">Pepperi - Israel</h3>'+
-        // '<div id="bodyContent">'+
-        // '<p>14 Hacharoshet, RAANANA 4365707</p>'+
-        // '</div>'+
-        // '</div>';
-     
-        // var infowindow = new window['google'].maps.InfoWindow({
-        //   content: contentString
-        // });
-     
-
-    markers.forEach(markerInfo => {
+        this.employeeMarkers.forEach(markerInfo => {
             const marker = new google.maps.Marker({
                 ...markerInfo
-              });
+            });
 
-              const infoWindow = new google.maps.InfoWindow({
-                content: //marker.getTitle() var contentString = '<div id="content">'+
-                '<h2 class="thirdHeading">'+marker.getTitle()+'</h2>'+
-                '<div id="bodyContent">'+
-                '<p></p>'+
-                '</div>'+
-                '</div>'
-              });
+            const infoWindow = this.getInfoWindow(JSON.parse(markerInfo.title));
 
-             
-    marker.addListener("click", () => {
-        debugger;
-        infoWindow.open(marker.getMap(), marker);
-      });
-    })
-     
+            marker.addListener("click", () => {
+                if(this.lastInfoMarker){
+                    this.lastInfoMarker.close();
+                }
+            
+             infoWindow.open(marker.getMap(), marker);
+                this.lastInfoMarker = infoWindow;
+            });
+        });
+
+        if(this.autoPlay){
+            var self = this;
+            self.openInfoWindow(0);
+            let index = 1;
+            setInterval(function() {
+                self.openInfoWindow(index);
+                index = index < self.employeeMarkers.length -1  ? index+1 : 0;
+            }, this.interval);
     }
 
+    }
+    openInfoWindow(index){
+        if(this.lastInfoMarker){
+            this.lastInfoMarker.close();
+        }
+        let marker = new google.maps.Marker({
+            ...this.employeeMarkers[index]
+        });
+        let infoWindow = this.getInfoWindow(JSON.parse(this.employeeMarkers[index].title));
+        infoWindow.open(this.map,marker);
+        this.lastInfoMarker = infoWindow;
+    }
+
+    getInfoWindow(markerInfo){
+
+        const imageSRC = this.imagesPath + '/employees/' + markerInfo.email.split('@')[0] + '.jpg';
+
+        return new google.maps.InfoWindow({
+                content:   `<div class="cardMarker">
+                            <div class="markerContainer">
+                                <div class="cardContent">
+                                    <h3 class="title-xl">`+markerInfo.Name+`</h3>
+                                    <p class="body-lg">`+markerInfo.Title+`</p>
+                                    <p class="body-lg">`+markerInfo.Department+`</p>
+                                    <p class="body-lg">`+markerInfo.FunFact+`</p>
+                                    <p class="body-lg"> Since: ${markerInfo.StartedDateTime}</p>
+                                    <p class="body-lg">`+markerInfo.Address+`</p>
+                                </div>
+                                <div class="cardImage">
+                                    <img src="`+imageSRC+`" style="width:150px;">
+                                </div>
+                                </div>
+                            </div>`
+              });
+    }
     renderMap() {
      
         window['initMap'] = () => {
@@ -165,23 +194,28 @@ export class AddonComponent implements OnInit {
         let employee = await this.addonService.getEmployeeDetails(params);
        
         employee.empDetails?.forEach(emp => {
-           emp = JSON.parse(emp.Value)
+           const email = emp.Key;
+           emp = JSON.parse(emp.Value);
+           emp.email = email;
            empArr.push({
-                position: new google.maps.LatLng(32.159570 , 34.944170),
+            position: new google.maps.LatLng(emp.latlong.lat , emp.latlong.long),
+                //position: new google.maps.LatLng(32.159570 , 34.944170),
                 map: this.map,
                 animation: window['google'].maps.Animation.DROP,
-                title: emp.Name,
-                icon: this.getEmployeeMarker()
+                title: JSON.stringify(emp),
+                icon: this.getEmployeeMarker(emp.StartedDateTime)
          });
        });
 
        return empArr;
     }
 
-    getEmployeeMarker(){
+    getEmployeeMarker(date){
 
+        var workingYears: number = new Date().getFullYear() - new Date(date).getFullYear() || 1;
+        const img = workingYears < 2 ? 'Pin-2-Sophomore-Chicken.png' : workingYears < 5 ? 'Pin-1-Freshman-Chick.png' : 'Pin-3-Senior-Chicken.png';
         let empIcon = {
-            url: this.imagesPath + '/icons/Pin-1-Freshman-Chick.png',
+            url: this.imagesPath + '/icons/' + img,
             scaledSize: new google.maps.Size(30, 40), // scaled size
             //origin: new google.maps.Point(0,0), // origin
             //anchor: new google.maps.Point(0, 0) // anchor
@@ -196,6 +230,7 @@ export class AddonComponent implements OnInit {
             config.disableClose = true;
             config.minWidth = '29rem'; // THE EDIT MODAL WIDTH
 
+            debugger;
         let dialogRef: MatDialogRef<any> = this.dialogService.openDialog(comp, data, config);
 
         dialogRef.afterClosed().subscribe((value) => {

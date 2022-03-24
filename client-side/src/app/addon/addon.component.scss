@@ -1,0 +1,53 @@
+::ng-deep .cardMarker{   
+        height: 100%;
+        width: 100%;
+        
+        background-color: #fff;
+        width: 400px;
+        border-radius: 0.25rem;
+        
+
+        .markerContainer{
+            display: flex;
+            justify-content: space-between;
+
+            .cardContent{
+                width: 70%;
+                padding: 1rem 1.25rem;
+                display: flex;
+                flex-direction: column;
+
+                * {
+                    margin: 0;
+                }
+            }
+
+            .cardImage{
+                position: absolute;
+                top: 0;
+                right: 0;
+
+                img{
+                    width: 250px; 
+                    border-radius: 0.5rem
+                }
+            }
+        }
+    }
+
+
+    ::ng-deep .gm-style {
+    .gm-style-iw-c{
+        background-color: transparent;
+        padding: 2rem !important;
+        box-shadow: unset !important;
+        padding-bottom: 0 !important;
+    }
+    .gm-style-iw-d{
+        overflow: unset !important;
+    }
+
+   
+}
+
+

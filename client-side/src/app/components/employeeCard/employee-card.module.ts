@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateLoader, TranslateService, TranslateStore } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { PepFileService, PepAddonService, PepNgxLibModule } from '@pepperi-addons/ngx-lib';
-
+import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
-import { EmployeeCardComponent } from './employee-card.component';
 import { PepTextboxModule } from '@pepperi-addons/ngx-lib/textbox';
 import { PepTopBarModule } from '@pepperi-addons/ngx-lib/top-bar';
-import { PepDialogModule } from '@pepperi-addons/ngx-lib/dialog';
 import { PepButtonModule } from '@pepperi-addons/ngx-lib/button';
+import { EmployeeCardComponent } from './employee-card.component';
 
 
 
