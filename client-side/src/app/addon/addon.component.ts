@@ -7,7 +7,6 @@ import { PepDialogService } from "@pepperi-addons/ngx-lib/dialog";
 import { MatDialogRef } from "@angular/material/dialog";
 import { EmployeeCardComponent } from '../components/employeeCard/employee-card.component';
 import { NOT_BOOTSTRAPPED } from "single-spa";
-import { Fireworks } from 'fireworks-js'
 
 @Component({
     selector: 'addon-module',
