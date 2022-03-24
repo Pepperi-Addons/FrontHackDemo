@@ -7,6 +7,7 @@ import { PepDialogService } from "@pepperi-addons/ngx-lib/dialog";
 import { MatDialogRef } from "@angular/material/dialog";
 import { EmployeeCardComponent } from '../components/employeeCard/employee-card.component';
 import { NOT_BOOTSTRAPPED } from "single-spa";
+import { Fireworks } from 'fireworks-js'
 
 @Component({
     selector: 'addon-module',
@@ -44,6 +45,37 @@ export class AddonComponent implements OnInit {
     }
 
     ngOnInit() {
+
+        /*
+        let params =  {
+            email: 'lior.g@pepperi.com',
+            Value: {Name:"Lior Goell", 
+                    Address: "105-05 69th Ave, Forest Hills, NY, 11375", 
+                    latlong:{lat:"40.724320", long:"-73.848450"}, 
+                    StartedDateTime: "03/08/2015", 
+                    Title: "VP US Operations", 
+                    Department: "Not sure",
+                    FunFact: "Recovered diamonds with the estimated value of $20 M"}
+        }
+
+          let res =  this.addonService.setEmployeeDetails(params)
+
+       
+        
+          params = {
+            email: 'mor.k@pepperi.com',
+            Value: {Name:"Mor Konshtok", 
+                    Address: "333 River street, Hoboken, NJ, 07030", 
+                    latlong:{lat:"40.739910", long:"-74.027610"}, 
+                    StartedDateTime: "08/16/2021", 
+                    Title: "Office Manager & Customer services", 
+                    Department: "Not sure",
+                    FunFact: "Never smoked a cigarette or drank coffee"}
+        }
+        
+        res =  this.addonService.setEmployeeDetails(params)
+        */
+
         this.renderMap(); 
     }
 
@@ -56,11 +88,135 @@ export class AddonComponent implements OnInit {
     }
 
     loadMap = async () => {
+
+// Create a new StyledMapType object, passing it an array of styles,
+  // and the name to be displayed on the map type control.
+  const styledMapType = new google.maps.StyledMapType(
+    [
+      { elementType: "geometry", stylers: [{ color: "#ebe3cd" }] },
+      { elementType: "labels.text.fill", stylers: [{ color: "#523735" }] },
+      { elementType: "labels.text.stroke", stylers: [{ color: "#f5f1e6" }] },
+      {
+        featureType: "administrative",
+        elementType: "geometry.stroke",
+        stylers: [{ color: "#c9b2a6" }],
+      },
+      {
+        featureType: "administrative.land_parcel",
+        elementType: "geometry.stroke",
+        stylers: [{ color: "#dcd2be" }],
+      },
+      {
+        featureType: "administrative.land_parcel",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#ae9e90" }],
+      },
+      {
+        featureType: "landscape.natural",
+        elementType: "geometry",
+        stylers: [{ color: "#dfd2ae" }],
+      },
+      {
+        featureType: "poi",
+        elementType: "geometry",
+        stylers: [{ color: "#dfd2ae" }],
+      },
+      {
+        featureType: "poi",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#93817c" }],
+      },
+      {
+        featureType: "poi.park",
+        elementType: "geometry.fill",
+        stylers: [{ color: "#a5b076" }],
+      },
+      {
+        featureType: "poi.park",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#447530" }],
+      },
+      {
+        featureType: "road",
+        elementType: "geometry",
+        stylers: [{ color: "#f5f1e6" }],
+      },
+      {
+        featureType: "road.arterial",
+        elementType: "geometry",
+        stylers: [{ color: "#fdfcf8" }],
+      },
+      {
+        featureType: "road.highway",
+        elementType: "geometry",
+        stylers: [{ color: "#f8c967" }],
+      },
+      {
+        featureType: "road.highway",
+        elementType: "geometry.stroke",
+        stylers: [{ color: "#e9bc62" }],
+      },
+      {
+        featureType: "road.highway.controlled_access",
+        elementType: "geometry",
+        stylers: [{ color: "#e98d58" }],
+      },
+      {
+        featureType: "road.highway.controlled_access",
+        elementType: "geometry.stroke",
+        stylers: [{ color: "#db8555" }],
+      },
+      {
+        featureType: "road.local",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#806b63" }],
+      },
+      {
+        featureType: "transit.line",
+        elementType: "geometry",
+        stylers: [{ color: "#dfd2ae" }],
+      },
+      {
+        featureType: "transit.line",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#8f7d77" }],
+      },
+      {
+        featureType: "transit.line",
+        elementType: "labels.text.stroke",
+        stylers: [{ color: "#ebe3cd" }],
+      },
+      {
+        featureType: "transit.station",
+        elementType: "geometry",
+        stylers: [{ color: "#dfd2ae" }],
+      },
+      {
+        featureType: "water",
+        elementType: "geometry.fill",
+        stylers: [{ color: "#b9d3c2" }],
+      },
+      {
+        featureType: "water",
+        elementType: "labels.text.fill",
+        stylers: [{ color: "#92998d" }],
+      },
+    ],
+    { name: "Styled Map" }
+  );
+
         this.map = new window['google'].maps.Map(this.mapElement.nativeElement, {
           center: {lat: 32.184448, lng: 34.870766},
           fullscreenControl: true,
-          zoom: 12
+          zoom: 12,
+          mapTypeControlOptions: {
+            mapTypeIds: ["roadmap", "satellite", "hybrid", "terrain", "styled_map"],
+          },
         });
+
+         //Associate the styled map with the MapTypeId and set it to display.
+         this.map.mapTypes.set("styled_map", styledMapType);
+         this.map.setMapTypeId("styled_map");
         
         this.officeIcon = {
             url: this.imagesPath + '/icons/Pin-0-Pepperi.png', // url
