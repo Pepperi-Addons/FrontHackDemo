@@ -26,7 +26,7 @@ export class AddonComponent implements OnInit {
 
     //play card
     interval = 5000;
-    autoPlay = true;
+    autoPlay = false;
 
     constructor(
         private renderer: Renderer2,
@@ -52,7 +52,7 @@ export class AddonComponent implements OnInit {
             'imagePath': this.imagesPath,
             'employeeMarkers': this.employeeMarkers
         }
-       // this.openDialog(EmployeeCardComponent, (res) => {debugger}, data);
+        this.openDialog(EmployeeCardComponent, (res) => {debugger}, data);
     }
 
     loadMap = async () => {
